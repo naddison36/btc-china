@@ -1,5 +1,4 @@
-BTC China
-Node.js wrapper to BTC China API
+Node.js API wrapper to BTC China exchange
 ===============
 
 A node.js wrapper for the [Trading](http://btcchina.org/api-trade-documentation-en#trade_api_authentication) and [Market](http://btcchina.org/api-market-data-documentation-en) APIs exposed by bitcoin exchange [BTC China](https://www.btcchina.com).
@@ -9,7 +8,7 @@ Please contact support@btcchina.com if you are having trouble opening and accoun
 
 ### Install
 
-`npm install btc-china
+`npm install btc-china`
 
 ### Error handling
 The first parameter to each API function is a callback function which is passed error and data objects.
