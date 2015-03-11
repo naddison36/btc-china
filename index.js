@@ -91,10 +91,21 @@ BTCChina.prototype.publicRequest = function(method, params, callback)
 
     var headers = {"User-Agent": "BTC China Javascript API Client"};
 
-    var path = '/data/' + method;
+    // TODO need a better way of handling trades using a different API
+    // note the doco says ticker and order book should use https://data.btcchina.com but it doesn't work
+    // support have advised ticket and order book need to use 'https://api.btcchina.com'
+    var url;
+    if (method === 'trades')
+    {
+        url = 'https://data.btcchina.com/data/' + method;
+    }
+    else
+    {
+        url = this.server + '/data/' + method;
+    }
 
     var options = {
-        url: this.server + path,
+        url: url,
         method: 'GET',
         headers: headers,
         timeout: this.timeout,
@@ -171,7 +182,7 @@ BTCChina.prototype.getTicker = function getTicker(callback, market)
 
 BTCChina.prototype.getOrderBook = function getOrderBook(callback, market)
 {
-    this.publicRequest('orderbook', {market: market}, callback);
+    this.publicRequest('orderbook', {market: market, limit: 1000}, callback);
 };
 
 BTCChina.prototype.getHistoryData = function getHistoryData(callback, params)
@@ -179,9 +190,11 @@ BTCChina.prototype.getHistoryData = function getHistoryData(callback, params)
     this.publicRequest('historydata', params, callback);
 };
 
-BTCChina.prototype.getTrades = function getTrades(callback)
+BTCChina.prototype.getTrades = function getTrades(callback, market, params)
 {
-    this.publicRequest('trades', {}, callback);
+    params = _.extend({market: market, sincetype: 'time'}, params);
+
+    this.publicRequest('historydata', params, callback);
 };
 
 //
