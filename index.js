@@ -180,9 +180,14 @@ BTCChina.prototype.getTicker = function getTicker(callback, market)
     this.publicRequest('ticker', {market: market}, callback);
 };
 
-BTCChina.prototype.getOrderBook = function getOrderBook(callback, market)
+BTCChina.prototype.getOrderBook = function getOrderBook(callback, market, limit)
 {
-    this.publicRequest('orderbook', {market: market, limit: 1000}, callback);
+    var params = {market: market};
+
+    // add limit to parameters if it was passed to this function
+    if (limit) params.limit = limit;
+
+    this.publicRequest('orderbook', params, callback);
 };
 
 BTCChina.prototype.getHistoryData = function getHistoryData(callback, params)

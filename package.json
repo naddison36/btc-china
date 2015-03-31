@@ -1,10 +1,10 @@
 {
     "name": "btc-china",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Node.js API wrapper to BTC China bitcoin exchange",
     "main": "index.js",
     "dependencies": {
-        "request": "~2.51.0",
+        "request": "~2.54.0",
         "underscore": "~1.8.2",
         "crypto": "~0.0.3",
         "verror": "~1.6.0",

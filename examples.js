@@ -8,7 +8,9 @@ var publicClient = new BTCChina();
 
 // publicClient.getTicker(console.log, 'BTCCNY');
 
-// publicClient.getOrderBook(console.log, 'BTCCNY');
+//publicClient.getOrderBook(console.log, 'BTCCNY');
+// limit the number of orders on both the bids and asks
+//publicClient.getOrderBook(console.log, 'BTCCNY', 10);
 
 // publicClient.getTrades(console.log);
 
