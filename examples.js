@@ -62,6 +62,7 @@ var privateClient = new BTCChina(key, secret);
 // privateClient.getTransactions(console.log);
 // privateClient.getTransactions(console.log, 'all', 10);
 // privateClient.getTransactions(console.log, 'fundmoney', 2);
+// privateClient.getTransactions(console.log, 'sellbtc', 50);
 // privateClient.getTransactions(console.log, 'all', 5, 0, since1Day, 'time');
 
 // privateClient.getMarketDepth2(console.log);
@@ -77,3 +78,6 @@ var privateClient = new BTCChina(key, secret);
 // privateClient.getWithdrawal(console.log, 1);
 
 // privateClient.requestWithdrawal(console.log, 'BTC', 0.01);
+
+// my trades since 1 July 2014
+// privateClient.getHistoryData(console.log, {since:1404172800, sincetype:"time", "limit":1000});

@@ -265,7 +265,7 @@ BTCChina.prototype.getOrder = function getOrder(callback, id, market, withDetail
 
 BTCChina.prototype.getTransactions = function getTransactions(callback, type, limit, offset, since, sinceType)
 {
-    var params = constructParamArray(arguments, 3);
+    var params = constructParamArray(arguments, 5);
 
     this.privateRequest('getTransactions', params, callback);
 };
