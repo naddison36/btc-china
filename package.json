@@ -1,14 +1,14 @@
 {
     "name": "btc-china",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Node.js API wrapper to BTCC (formally BTC China) bitcoin exchange",
     "main": "index.js",
     "dependencies": {
-        "request": "~2.64.0",
+        "request": "~2.67.0",
         "underscore": "~1.8.3",
         "crypto": "~0.0.3",
         "verror": "~1.6.0",
-        "microtime": "~1.2.0"
+        "microtime": "~2.0.0"
     },
     "keywords": [
         "BTCC",
