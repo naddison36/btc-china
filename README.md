@@ -21,7 +21,7 @@ The first parameter to each API function is a callback function which is passed 
 The error object is an instance of [VError](https://github.com/davepacheco/node-verror) which is an extension of the standard Error object.
 The three main properties are:
 - **message** a description of the error with all the available information so problems in production can be diagnosed. For example the url, http request method, parameters, error codes and messages
-- **name** the HTTP or [OKCoin error code](https://www.okcoin.com/about/rest_request.do) so specific errors can be programatically detected. For example, 503 if you are sending too many requests per second or 10010 if there is not enough funds to add a trade
+- **name** the HTTP or BTCC error code so specific errors can be programatically detected. For example, 503 if you are sending too many requests per second or 32004 if there is not enough BTC funds to add an order
 - **cause** the underlying error object. eg the error object from a failed request or json parse. Note there will be no cause error for OKCoin errors
 
 ### Examples
