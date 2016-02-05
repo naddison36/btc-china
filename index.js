@@ -3,6 +3,7 @@ var util = require('util'),
     request	= require('request'),
     crypto = require('crypto'),
     VError = require('verror'),
+    cheerio = require('cheerio'),
     microtime = require('microtime');
 
 var BTCChina = function BTCChina(key, secret, server, timeout)
@@ -134,14 +135,14 @@ function executeRequest(options, requestDesc, callback)
         }
         else if (response.statusCode < 200 || response.statusCode >= 300)
         {
-            error = new VError('%s HTTP status code %s returned from %s', functionName,
-                response.statusCode, requestDesc);
+            error = new VError('%s HTTP status code %s returned from %s. Status message: %s', functionName,
+                response.statusCode, requestDesc, response.statusMessage);
             error.name = response.statusCode;
         }
         // if request was not able to parse json response into an object
         else if (!_.isObject(data) )
         {
-            error = new VError('%s could not parse response from %s\nResponse: %s', functionName, requestDesc, data);
+            error = new VError('%s could not parse response from %s\n. HTTP status code %s. Response: %s', functionName, requestDesc, response.statusCode, data);
             error.name = data;
         }
         else if (_.has(data, 'error'))
@@ -310,6 +311,67 @@ BTCChina.prototype.getAccountInfo = function getAccountInfo(callback, type)
     var params = constructParamArray(arguments, 1);
 
     this.privateRequest('getAccountInfo', params, callback);
+};
+
+/**
+ * Screen scraps the fiat deposit and withdrawal exchange rates from BTCC's website
+ * @param callback (err: Error, depositRate: number, withdrawalRate: number): void
+ * @param baseCurrency USD in USD/CNY
+ * @param quoteCurrency CNY in USD/CNY
+ */
+BTCChina.prototype.getFiatExchangeRates = function getFiatExchangeRates(callback, baseCurrency, quoteCurrency)
+{
+    var options = {
+        url: "https://exchange.btcc.com/page/internationalvoucher",
+        method: 'GET',
+        timeout: this.timeout
+    };
+
+    var requestDesc = util.format('%s request to url %s',
+        options.method, options.url);
+
+    request(options, function(err, response, html)
+    {
+        var error;
+
+        if(err)
+        {
+            error = new VError(err, 'failed %s', requestDesc);
+            error.name = err.code;
+            return callback(error);
+        }
+        else if (response.statusCode < 200 || response.statusCode >= 300)
+        {
+            error = new VError('HTTP status code %s returned from %s. Status message: %s',
+                response.statusCode, requestDesc, response.statusMessage);
+            error.name = response.statusCode;
+            return callback(error);
+        }
+        else if (!html)
+        {
+            error = new VError('no HTML response from %s', requestDesc);
+            return callback(error);
+        }
+
+        var symbol = baseCurrency + '/' + quoteCurrency;
+
+        // try and parse HTML body form response
+        $ = cheerio.load(html);
+        var rateRow = $("table tr:contains('" + symbol +"')");
+
+        if (rateRow.length > 0)
+        {
+            var depositRate = rateRow.children().eq(1).text();
+            var withdrawalRate = rateRow.children().eq(2).text();
+
+            return callback(null, Number(depositRate), Number(withdrawalRate) );
+        }
+        else
+        {
+            error = new VError('Could not find exchange rate for symbol %s', symbol);
+            return callback(error);
+        }
+    });
 };
 
 module.exports = BTCChina;

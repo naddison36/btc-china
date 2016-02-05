@@ -22,6 +22,9 @@ var publicClient = new BTCChina();
 // get 2 trades since 1 minute ago
 //publicClient.getHistoryData(console.log, {limit: 2, since: since1Minute, sincetype: 'time' });
 
+//publicClient.getFiatExchangeRates(console.log, "USD", "CNY");
+//publicClient.getFiatExchangeRates(console.log, "CNH", "CNY");
+
 // Either pass your API key and secret as the first and second parameters to examples.js. eg
 // node examples.js your-api-key your-api-secret
 //
