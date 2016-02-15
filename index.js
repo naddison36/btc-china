@@ -353,25 +353,55 @@ BTCChina.prototype.getFiatExchangeRates = function getFiatExchangeRates(callback
             return callback(error);
         }
 
-        var symbol = baseCurrency + '/' + quoteCurrency;
+        parserCurrencies(html, callback);
+    });
+};
 
-        // try and parse HTML body form response
-        $ = cheerio.load(html);
-        var rateRow = $("table tr:contains('" + symbol +"')");
+function parserCurrencies(html, callback)
+{
+    var returnRates = {},
+        returnError;
 
-        if (rateRow.length > 0)
+    // for each currency that can be convered to CNY
+    ['USD','CNH','HKD','EUR'].forEach(function(baseCurrency)
+    {
+        var rates = parserRates(baseCurrency, 'CNY', html);
+
+        if (rates instanceof Error)
         {
-            var depositRate = rateRow.children().eq(1).text();
-            var withdrawalRate = rateRow.children().eq(2).text();
-
-            return callback(null, Number(depositRate), Number(withdrawalRate) );
+            returnError = rates;
         }
         else
         {
-            error = new VError('Could not find exchange rate for symbol %s', symbol);
-            return callback(error);
+            returnRates[baseCurrency + 'CNY'] = rates;
         }
-    });
-};
+    })
+
+    callback(returnError, returnRates);
+}
+
+function parserRates(baseCurrency, quoteCurrency, html)
+{
+    var symbol = baseCurrency + '/' + quoteCurrency;
+
+    // try and parse HTML body form response
+    $ = cheerio.load(html);
+    var rateRow = $("table tr:contains('" + symbol +"')");
+
+    if (rateRow.length > 0)
+    {
+        var depositRate = rateRow.children().eq(1).text();
+        var withdrawalRate = rateRow.children().eq(2).text();
+
+        return {
+            deposit: Number(depositRate),
+            withdrawal: Number(withdrawalRate)
+        };
+    }
+    else
+    {
+        return new VError('Could not find exchange rate for symbol %s', symbol);
+    }
+}
 
 module.exports = BTCChina;
