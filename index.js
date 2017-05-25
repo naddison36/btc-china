@@ -3,8 +3,7 @@ var util = require('util'),
     request	= require('request'),
     crypto = require('crypto'),
     VError = require('verror'),
-    cheerio = require('cheerio'),
-    microtime = require('microtime');
+    cheerio = require('cheerio');
 
 var BTCChina = function BTCChina(key, secret, server, timeout)
 {
@@ -39,7 +38,8 @@ BTCChina.prototype.privateRequest = function(method, params, callback)
         return callback(error);
     }
 
-    var tonce = microtime.now();
+    // TODO fix so there can be two requests in the one second
+    var tonce = new Date() * 1000; // spoof microsecond
 
     var message = "tonce=" + tonce + "&" +
             "accesskey=" + this.key + "&" +
